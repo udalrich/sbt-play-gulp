@@ -42,7 +42,7 @@ object PlayGulpPlugin extends AutoPlugin {
    * Main plugin settings which add gulp commands to sbt tasks
    */
   lazy val playGulpSettings: Seq[Def.Setting[_]] = Seq(
-    libraryDependencies += "com.github.mmizutani" %% "play-gulp" % "0.1.5" exclude("com.typesafe.play", "play"),
+    libraryDependencies += "com.github.mmizutani" %% "play-gulp" % "0.1.6-SNAPSHOT" exclude("com.typesafe.play", "play"),
 
     // Path of the frontend project root
     gulpDirectory <<= (baseDirectory in Compile) {
@@ -59,7 +59,7 @@ object PlayGulpPlugin extends AutoPlugin {
         Seq(
           "git"
         ).map(cmd(_, base))
-    }, 
+    },
 
     commands <++= gulpDirectory {
       base =>

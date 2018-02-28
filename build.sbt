@@ -6,7 +6,7 @@ lazy val `sbt-play-gulp`: Project = (project in file("."))
     name := "sbt-play-gulp",
     scalaVersion := "2.10.6",
     sbtPlugin := true,
-    addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.0"),
+    addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.0"),
     addSbtPlugin("com.typesafe.sbt" % "sbt-web" % "1.3.0"),
     commonSettings
   )
@@ -18,6 +18,10 @@ lazy val `play-gulp`: Project = project.in(file("play-gulp"))
     scalaVersion := "2.11.8",
     commonSettings
   )
+
+libraryDependencies += "com.typesafe.play" %% "play-iteratees" % "2.6.1"
+
+libraryDependencies += "com.typesafe.play" %% "play-iteratees-reactive-streams" % "2.6.1"
 
 lazy val commonSettings = Seq(
   scalacOptions ++= Seq("-deprecation", "-unchecked", "-encoding", "utf8"),

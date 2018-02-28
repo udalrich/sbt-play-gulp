@@ -4,10 +4,10 @@ import akka.util.ByteString
 import javax.inject._
 import play.api._
 import play.api.http.HttpEntity
-import play.api.libs.MimeTypes
+import play.api.http.FileMimeTypes
 import play.api.libs.iteratee.Enumerator
 import play.api.libs.iteratee.Execution.Implicits
-import play.api.libs.streams.Streams
+import play.api.libs.streams.IterateeStreams
 import play.api.mvc._
 import java.io.File
 import scala.concurrent.{ExecutionContext,Future}
@@ -16,7 +16,7 @@ import controllers.Assets
 
 @Singleton
 class GulpAssets @Inject() (env: play.api.Environment,
-                            conf: Configuration)(implicit val ec:ExecutionContext) extends Controller {
+                            conf: Configuration)(implicit val ec:ExecutionContext) extends BaseController {
 
   private lazy val logger = Logger(getClass)
 
@@ -86,10 +86,10 @@ class GulpAssets @Inject() (env: play.api.Environment,
     } map { file =>
       if (file.isFile) {
         logger.info(s"Serving $file")
-        val mimeType = MimeTypes.forFileName(file.getName).orElse(Some(play.api.http.ContentTypes.BINARY))
+        val mimeType = fileMimeTypes.forFileName(file.getName).orElse(Some(play.api.http.ContentTypes.BINARY))
         val resourceData = Enumerator.fromFile(file)(Implicits.defaultExecutionContext)
         Ok.sendEntity(HttpEntity.Streamed(
-          akka.stream.scaladsl.Source.fromPublisher(Streams.enumeratorToPublisher(resourceData)).map(ByteString.apply),
+          akka.stream.scaladsl.Source.fromPublisher(IterateeStreams.enumeratorToPublisher(resourceData)).map(ByteString.apply),
           Some(file.length()),
           mimeType
         )).withHeaders(CACHE_CONTROL -> "no-cache")
